@@ -1,0 +1,64 @@
+#include <iostream>
+#include <fstream>
+#include <stdexcept>
+
+class InvalidMileageException : public std::exception {
+public:
+    const char* what() const noexcept override {
+        return "Invalid mileage value entered";
+    }
+};
+
+double calculateMileage(double start, double end) {
+    std::cout << "Entering calculateMileage function" << std::endl;
+    
+    if (start < 0 || end < 0) {
+        throw InvalidMileageException();
+    }
+    
+    if (start > end) {
+        throw std::invalid_argument("Starting mileage cannot be greater than ending mileage");
+    }
+    
+    std::cout << "Exiting calculateMileage function" << std::endl;
+    return end - start;
+}
+
+void logError(const std::string& error) {
+    std::ofstream logFile("error_log.txt", std::ios::app);
+    logFile << "Error: " << error << std::endl;
+    logFile.close();
+}
+
+int main() {
+    double startMileage, endMileage;
+    bool validInput = false;
+    
+    while (!validInput) {
+        try {
+            std::cout << "Enter starting mileage: ";
+            std::cin >> startMileage;
+            
+            std::cout << "Enter ending mileage: ";
+            std::cin >> endMileage;
+            
+            double distance = calculateMileage(startMileage, endMileage);
+            std::cout << "Total distance traveled: " << distance << " miles" << std::endl;
+            
+            validInput = true;
+            
+        } catch (const InvalidMileageException& e) {
+            logError(e.what());
+            std::cout << "Error: " << e.what() << "\nPlease try again." << std::endl;
+            
+        } catch (const std::invalid_argument& e) {
+            logError(e.what());
+            std::cout << "Error: " << e.what() << "\nPlease try again." << std::endl;
+            
+        } catch (...) {
+            std::cout << "An unexpected error occurred. Please try again." << std::endl;
+        }
+    }
+    
+    return 0;
+}
