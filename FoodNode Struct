@@ -1,0 +1,12 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+
+struct FoodNode {
+    std::string foodName;
+    float protein;
+    float carbs;
+    float fat;
+    FoodNode* next;
+};
