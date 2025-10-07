@@ -1,0 +1,21 @@
+class Truck : public Vehicle {
+private:
+    bool sidePanelStorage;
+    bool autoReleaseTailgate;
+
+public:
+    Truck(std::string mk, std::string mdl, std::string clr, int m, double price,
+          bool storage, bool tailgate)
+        : Vehicle(mk, mdl, clr, m, price),
+          sidePanelStorage(storage), autoReleaseTailgate(tailgate) {}
+
+    void printDetails() const override {
+        Vehicle::printDetails();
+        std::cout << "Side Panel Storage: " << (sidePanelStorage ? "Yes" : "No")
+                  << "\nAuto Release Tailgate: " << (autoReleaseTailgate ? "Yes" : "No") << std::endl;
+    }
+
+    std::string getType() const override {
+        return "Truck";
+    }
+};

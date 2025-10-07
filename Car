@@ -1,0 +1,21 @@
+class Car : public Vehicle {
+private:
+    bool spareInTrunk;
+    bool rearWindshieldWiper;
+
+public:
+    Car(std::string mk, std::string mdl, std::string clr, int m, double price,
+        bool spare, bool wiper)
+        : Vehicle(mk, mdl, clr, m, price),
+          spareInTrunk(spare), rearWindshieldWiper(wiper) {}
+
+    void printDetails() const override {
+        Vehicle::printDetails();
+        std::cout << "Spare in Trunk: " << (spareInTrunk ? "Yes" : "No")
+                  << "\nRear Windshield Wiper: " << (rearWindshieldWiper ? "Yes" : "No") << std::endl;
+    }
+
+    std::string getType() const override {
+        return "Car";
+    }
+};

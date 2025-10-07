@@ -1,34 +1,78 @@
-#ifndef BANKACCOUNT_H
-#define BANKACCOUNT_H
+#include <iostream>
+#include <vector>
+#include <memory>
 
-#include <string>
-using namespace std;
+void showMenu() {
+    std::cout << "\n--- Car Dealership Inventory Menu ---\n";
+    std::cout << "1. Add Car\n2. Add Truck\n3. Print Inventory\n";
+    std::cout << "4. Search by Make/Model/Color\n5. Print Vehicle Details\n6. Exit\n";
+    std::cout << "Choose an option: ";
+}
 
-class BankAccount {
-private:
-    string customerName;
-    double savingsBalance;
-    double checkingBalance;
+void searchInventory(const std::vector<std::shared_ptr<Vehicle>>& inventory, const std::string& key) {
+    for (const auto& v : inventory) {
+        if (v->getMake() == key || v->getModel() == key || v->getColor() == key) {
+            std::cout << "\n[" << v->getType() << "] " << v->getMake() << " " << v->getModel() << " (" << v->getColor() << ")\n";
+        }
+    }
+}
 
-public:
-    BankAccount(string newName, double chBalance, double sBalance);
+void printInventory(const std::vector<std::shared_ptr<Vehicle>>& inventory) {
+    for (const auto& v : inventory) {
+        std::cout << "\n[" << v->getType() << "] " << v->getMake() << " " << v->getModel() << " (" << v->getColor() << ")\n";
+    }
+}
 
-    void SetName(string newName);
-    string GetName();
+void printVehicleDetails(const std::vector<std::shared_ptr<Vehicle>>& inventory, const std::string& model) {
+    for (const auto& v : inventory) {
+        if (v->getModel() == model) {
+            std::cout << "\n--- Vehicle Details ---\n";
+            v->printDetails();
+            return;
+        }
+    }
+    std::cout << "Vehicle not found.\n";
+}
 
-    void SetChecking(double balance);
-    double GetChecking();
+int main() {
+    std::vector<std::shared_ptr<Vehicle>> inventory;
+    int choice;
 
-    void SetSavings(double balance);
-    double GetSavings();
+    do {
+        showMenu();
+        std::cin >> choice;
 
-    void DepositChecking(double amt);
-    void DepositSavings(double amt);
+        if (choice == 1) {
+            std::string mk, mdl, clr;
+            int mpg;
+            double price;
+            bool spare, wiper;
+            std::cout << "Enter make, model, color, mpg, msrp, spareInTrunk (1/0), rearWiper (1/0): ";
+            std::cin >> mk >> mdl >> clr >> mpg >> price >> spare >> wiper;
+            inventory.push_back(std::make_shared<Car>(mk, mdl, clr, mpg, price, spare, wiper));
+        } else if (choice == 2) {
+            std::string mk, mdl, clr;
+            int mpg;
+            double price;
+            bool storage, tailgate;
+            std::cout << "Enter make, model, color, mpg, msrp, sidePanelStorage (1/0), autoTailgate (1/0): ";
+            std::cin >> mk >> mdl >> clr >> mpg >> price >> storage >> tailgate;
+            inventory.push_back(std::make_shared<Truck>(mk, mdl, clr, mpg, price, storage, tailgate));
+        } else if (choice == 3) {
+            printInventory(inventory);
+        } else if (choice == 4) {
+            std::string key;
+            std::cout << "Enter make, model, or color to search: ";
+            std::cin >> key;
+            searchInventory(inventory, key);
+        } else if (choice == 5) {
+            std::string model;
+            std::cout << "Enter model to view details: ";
+            std::cin >> model;
+            printVehicleDetails(inventory, model);
+        }
 
-    void WithdrawChecking(double amt);
-    void WithdrawSavings(double amt);
+    } while (choice != 6);
 
-    void TransferToSavings(double amt);
-};
-
-#endif
+    return 0;
+}
